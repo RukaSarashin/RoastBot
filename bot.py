@@ -1,7 +1,7 @@
 # MIT License
-#
+
 # Copyright (c) 2023 jvherck (on GitHub)
-#
+
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
@@ -20,6 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+
 import discord, os, random, json
 from discord.ext.commands import Bot, Context, max_concurrency, BucketType, cooldown, MemberConverter
 from discord.ext.commands.errors import CommandOnCooldown
@@ -30,7 +31,7 @@ from roastedbyai import Conversation, MessageLimitExceeded, CharacterLimitExceed
 load_dotenv()
 
 # Using the bot's ID in a mention as prefix
-bot = Bot(command_prefix="<@857170119108722708> ",
+bot = Bot(command_prefix="<@1140242477270454363> ",
           intents=discord.Intents.all())
 mc = MemberConverter()
 
@@ -45,7 +46,7 @@ async def on_ready():
     print("Bot logged in as {}".format(bot.user))
 
 
-@bot.command(name="roast")
+@bot.command(name="ativar")
 @max_concurrency(1, BucketType.user)
 @max_concurrency(4, BucketType.channel)
 @cooldown(1, 15, BucketType.user)
@@ -74,7 +75,7 @@ async def _roast(ctx: Context, target: str = None):
         return
     pb = PromptButtons()
     msg = await ctx.reply(
-        "We'll be taking turns in trying to roast each other. Are you sure you can handle this and want to continue?",
+        "Estaremos nos revezando tentando assar um ao outro. Tem certeza de que pode lidar com isso e deseja continuar?",
         view=pb)
     pb.msg = msg
     pb.ctx = ctx
@@ -92,14 +93,14 @@ class PromptButtons(discord.ui.View):
                              button: discord.ui.Button):
         if interaction.user.id != self.ctx.author.id:
             await interaction.response.send_message(
-                "This is not your roast battle.", ephemeral=True)
+                "Esta não é a sua batalha assado.", ephemeral=True)
             return
         await self.msg.edit(
             content=
-            "You accepted the roast battle. May the biggest chicken be the hottest roast.",
+            "Você aceitou a batalha do assado. Que o maior frango seja o assado mais gostoso.",
             view=None)
         msg = await self.ctx.send(
-            f"{self.ctx.author.mention} Alright, give me your best roast and we'll take turns.\nIf you want to stop, simply click the button or send \"stop\" or \"quit\"."
+            f"{self.ctx.author.mention} Tudo bem, me dê seu melhor assado e nós revezaremos.\nSe quiser parar, basta clicar no botão ou enviar \"parar\" ou \"sair\"."
         )
         await _roast_battle(self.ctx, prev_msg=msg)
 
@@ -108,10 +109,10 @@ class PromptButtons(discord.ui.View):
                             button: discord.ui.Button):
         if interaction.user.id != self.ctx.author.id:
             await interaction.response.send_message(
-                "This is not your roast battle.", ephemeral=True)
+                "Esta não é a sua batalha assado.", ephemeral=True)
             return
         await self.msg.edit(
-            content="You cancelled and chickened out of the roast battle.",
+            content="Você cancelou e se acovardou na batalha do assado.",
             view=None)
 
 
@@ -127,13 +128,13 @@ class RoastBattleCancel(discord.ui.View):
                           button: discord.ui.Button):
         if interaction.user.id != self.ctx.author.id:
             await interaction.response.send_message(
-                "This is not your roast battle.", ephemeral=True)
+                "Esta não é a sua batalha assado.", ephemeral=True)
             return
         self.convo.kill()
         self.convo.killed = True
         await interaction.message.edit(content=interaction.message.content,
                                        view=None)
-        await interaction.response.send_message("Boo, you're no fun.")
+        await interaction.response.send_message("Boo, você não é divertido.")
         return
 
 
@@ -159,8 +160,8 @@ async def _roast_battle(ctx: Context, prev_msg: discord.Message):
                     await ctx.typing()
                     if msg.content.lower() in ["stop", "quit"]:
                         await ctx.channel.send(
-                            f"{ctx.author.mention} you're so lame bro, chickening out like this. "
-                            f"But I wouldn't want to hurt your few little braincells much more, buh-bye."
+                            f"{ctx.author.mention} você é tão manco mano, se acovardando assim. "
+                            f"Mas eu não gostaria de machucar muito mais suas poucas células cerebrais, tchau."
                         )
                         convo.kill()
                         return
@@ -169,18 +170,18 @@ async def _roast_battle(ctx: Context, prev_msg: discord.Message):
                 except TimeoutError:
                     sleep(1)
                     await ctx.send(
-                        f"{ctx.author.mention} I'm too tired to continue talking right now, buh-bye."
+                        f"{ctx.author.mention} Estou muito cansado para continuar falando agora, tchau."
                     )
                     convo.kill()
                     return
                 except MessageLimitExceeded:
                     await ctx.reply(
-                        "It's been enough roasting now, I can already smell you're starting to burn..."
+                        "Já está assando o suficiente agora, eu já posso sentir o cheiro que você está começando a queimar..."
                     )
                     return
                 except CharacterLimitExceeded:
                     await ctx.reply(
-                        "Too much to read. Send 250 characters maximum, no need to write a whole book about me!\nCome on, try again!"
+                        "Muito para ler. Envie no máximo 250 caracteres, não há necessidade de escrever um livro inteiro sobre mim!\nVenha, tente novamente!"
                     )
                     break
                 else:
@@ -196,7 +197,7 @@ async def _roast_battle(ctx: Context, prev_msg: discord.Message):
 
 
 async def _roast_someone(ctx: Context, target: discord.Member | None = None):
-    """Roast someone :smiling_imp:"""
+    """assar alguém :smiling_imp:"""
     if target is None:
         dumb = [
             "https://media.tenor.com/CZoZV7amWI8AAAAC/roast-turkey-turkey.gif",
@@ -209,33 +210,33 @@ async def _roast_someone(ctx: Context, target: discord.Member | None = None):
             "You're so stupid you even forgot to mention someone to roast, dumbass.",
             "Cooking up the perfect roast... Roast ready at <t:{}:f>".format(
                 int(time() + random.randint(50_000, 500_000_000))),
-            "Who do you want to roast, dumbass. Next time tell me who to roast."
+            "Quem você quer assar, idiota. Da próxima vez, diga-me quem assar."
         ]
         await ctx.reply(random.choice(dumb))
         return
     elif target.id == ctx.author.id:
         dumb = [
-            "Look in the mirror, there's my roast. Now next time give me someone else to roast",
-            "Why do you even wanna roast yourself?",
+            "Olhe no espelho, lá está o meu assado. Agora, da próxima vez, me dê outra pessoa para assar",
+            "Por que você ainda quer se assar?",
             "https://tenor.com/view/roast-turkey-turkey-thanksgiving-gif-18067752",
-            "You get no bitches, so lonely you're even trying to roast yourself...",
-            "Stop roasting yourself, there's so many roasts ready to use on others",
-            "Cooking up the perfect roast... Roast ready at <t:{}:f>".format(
+            "Você não tem cadelas, tão sozinho que está tentando se assar...",
+            "Pare de se assar, há tantos assados prontos para usar nos outros",
+            "Preparando o assado perfeito... Assado pronto em <t:{}:f>".format(
                 int(time() + random.randint(50_000, 500_000_000))),
-            "Don't tell me there's {} other people to roast, and out of all those people you want to roast yourself??"
+            "Não me diga que há {} outras pessoas para assar, e de todas essas pessoas você quer assar você mesmo??"
             .format(ctx.guild.member_count - 1),
-            "Are you okay? Do you need mental help? Why is your dumbass trying to roast itself..."
+            "Você está bem? Você precisa de ajuda mental? Por que seu idiota está tentando se assar..."
         ]
         await ctx.reply(random.choice(dumb))
         return
     elif target.id == bot.user.id:
         dumb = [
-            "You really think I'm gonna roast myself? :joy:",
-            "You're just dumb as hell for thinking I would roast myself...",
-            "Lol no", "Sike you thought. I'm not gonna roast myself, dumbass.",
-            "I'm not gonna roast myself, so instead I'll roast you.\n",
-            "Buddy, do you really think you're so funny? I might just be a Discord bot, but I'm not gonna roast myself :joy::skull:",
-            "I'm just perfect, there's nothing to roast about me :angel:"
+            "Acha mesmo que vou me assar? :joy:",
+            "Você é burro pra caramba por pensar que eu iria me assar...",
+            "Lol não", "Sike você pensou. Eu não vou me assar, idiota.",
+            "Eu não vou me assar, então vou assar você.\n",
+            "Amigo, você realmente se acha tão engraçado? Posso ser apenas um bot do Discord, mas não vou me assar :joy::skull:",
+            "Eu sou simplesmente perfeito, não há nada para assar sobre mim :angel:"
         ]
         await ctx.reply(random.choice(dumb))
     initroast = random.choice(roasts)
@@ -273,7 +274,7 @@ async def _roast_someone(ctx: Context, target: discord.Member | None = None):
 async def on_command_error(ctx, ex):
     if isinstance(ex, CommandOnCooldown):
         await ctx.reply(
-            f"You're on cooldown, try again in **`{round(ex.retry_after, 1)}s`**"
+            f"Você está em cooldown, tente novamente em **`{round(ex.retry_after, 1)}s`**"
         )
 
 
